@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Task Manager</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <nav id="navbar" style="display: none;">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <i class="fas fa-tasks"></i>
+                    <span>TaskManager</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#dashboard" class="nav-link" data-page="dashboard">Dashboard</a>
+                    <a href="#projects" class="nav-link" data-page="projects">Projects</a>
+                    <a href="#tasks" class="nav-link" data-page="tasks">My Tasks</a>
+                </div>
+                <div class="nav-user">
+                    <span id="userName"></span>
+                    <span id="userRole" class="role-badge"></span>
+                    <button id="logoutBtn" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <main id="main-content">
+            <!-- Login Page -->
+            <div id="loginPage" class="page active">
+                <div class="auth-container">
+                    <div class="auth-card">
+                        <h2><i class="fas fa-sign-in-alt"></i> Login</h2>
+                        <form id="loginForm">
+                            <div class="form-group">
+                                <input type="email" id="loginEmail" placeholder="Email" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" id="loginPassword" placeholder="Password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </form>
+                        <p>Don't have an account? <a href="#" id="showSignup">Signup</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signup Page -->
+            <div id="signupPage" class="page">
+                <div class="auth-container">
+                    <div class="auth-card">
+                        <h2><i class="fas fa-user-plus"></i> Signup</h2>
+                        <form id="signupForm">
+                            <div class="form-group">
+                                <input type="text" id="signupName" placeholder="Full Name" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" id="signupEmail" placeholder="Email" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" id="signupPassword" placeholder="Password (min 6 chars)" required>
+                            </div>
+                            <div class="form-group">
+                                <select id="signupRole">
+                                    <option value="member">Member</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Signup</button>
+                        </form>
+                        <p>Already have an account? <a href="#" id="showLogin">Login</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Page -->
+            <div id="dashboardPage" class="page">
+                <div class="container">
+                    <h1><i class="fas fa-chart-line"></i> Dashboard</h1>
+                    <div id="dashboardSummary" class="dashboard-stats"></div>
+                    <div class="dashboard-grid">
+                        <div class="card">
+                            <h3>Recent Tasks</h3>
+                            <div id="recentTasks"></div>
+                        </div>
+                        <div class="card">
+                            <h3>Overdue Tasks</h3>
+                            <div id="overdueTasks"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projects Page -->
+            <div id="projectsPage" class="page">
+                <div class="container">
+                    <div class="page-header">
+                        <h1><i class="fas fa-folder"></i> Projects</h1>
+                        <button id="createProjectBtn" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Create Project
+                        </button>
+                    </div>
+                    <div id="projectsList" class="projects-grid"></div>
+                </div>
+            </div>
+
+            <!-- Tasks Page -->
+            <div id="tasksPage" class="page">
+                <div class="container">
+                    <div class="page-header">
+                        <h1><i class="fas fa-tasks"></i> My Tasks</h1>
+                        <div class="filter-controls">
+                            <select id="taskFilter">
+                                <option value="all">All Tasks</option>
+                                <option value="pending">Pending</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="completed">Completed</option>
+                                <option value="overdue">Overdue</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="tasksList" class="tasks-list"></div>
+                </div>
+            </div>
+
+            <!-- Project Details Modal -->
+            <div id="projectDetailsModal" class="modal">
+                <div class="modal-content modal-large">
+                    <span class="close">&times;</span>
+                    <h2 id="projectDetailsTitle"></h2>
+                    <div id="projectDetailsContent"></div>
+                </div>
+            </div>
+
+            <!-- Project Modal -->
+            <div id="projectModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2 id="projectModalTitle">Create Project</h2>
+                    <form id="projectForm">
+                        <input type="hidden" id="projectId">
+                        <div class="form-group">
+                            <input type="text" id="projectName" placeholder="Project Name" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="projectDescription" placeholder="Description" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" id="projectDeadline" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Project</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Task Modal -->
+            <div id="taskModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2 id="taskModalTitle">Create Task</h2>
+                    <form id="taskForm">
+                        <input type="hidden" id="taskId">
+                        <div class="form-group">
+                            <input type="text" id="taskTitle" placeholder="Task Title" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="taskDescription" placeholder="Description" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <select id="taskProject" required>
+                                <option value="">Select Project</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select id="taskAssignee" required>
+                                <option value="">Assign To</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select id="taskPriority">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" id="taskDueDate" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Task</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Add Member Modal -->
+            <div id="addMemberModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Add Team Member</h2>
+                    <form id="addMemberForm">
+                        <input type="hidden" id="memberProjectId">
+                        <div class="form-group">
+                            <input type="email" id="memberEmail" placeholder="Member Email" required>
+                        </div>
+                        <div class="form-group">
+                            <select id="memberRole">
+                                <option value="member">Member</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Member</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Comments Modal -->
+            <div id="commentsModal" class="modal">
+                <div class="modal-content modal-medium">
+                    <span class="close">&times;</span>
+                    <h2>Task Comments</h2>
+                    <div id="commentsList" class="comments-list"></div>
+                    <form id="addCommentForm">
+                        <input type="hidden" id="commentTaskId">
+                        <div class="form-group">
+                            <textarea id="commentText" placeholder="Add a comment..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Comment</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/auth.js"></script>
+</body>
+</html>
